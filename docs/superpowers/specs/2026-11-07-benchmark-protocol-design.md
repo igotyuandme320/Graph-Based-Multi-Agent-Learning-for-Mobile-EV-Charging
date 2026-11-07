@@ -35,5 +35,6 @@ python -m marl_ev_mcs benchmark --smoke \
 
 - `--policies`、训练 seed 和评估 seed 都必须非空；策略必须是项目支持的 `mlp` 或 `gnn`。
 - 所有策略必须使用完全相同的训练/评估回合数、步数、配置 preset、训练 seed 与评估 seed。
+- 对于同一个 `eval_seed`，第 `episode` 个评估回合在 reset 前使用 `(eval_seed + episode) mod 2^32` 重置场景 RNG；因此策略回合内的决策次数不会影响下一回合场景。
 - 训练不会读取旧模型；评估只读取同一 `(policy, train_seed)` 刚生成的 checkpoint 对。
 - 输出记录命令参数到 `protocol.json`，使 CSV 可追溯。JSON 中不写机器相关的绝对路径以外的隐式状态。

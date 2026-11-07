@@ -68,6 +68,8 @@ def test_benchmark_trains_each_policy_seed_then_evaluates_its_own_checkpoints(mo
     eval_calls = [call for call in calls if call["evaluate"]]
     assert len(train_calls) == 4
     assert len(eval_calls) == 8
+    assert all(call["episodes"] == 2 and call["steps"] == 3 for call in train_calls)
+    assert all(call["episodes"] == 1 and call["steps"] == 4 for call in eval_calls)
     assert {
         call["model_output_dir"].relative_to(tmp_path).as_posix()
         for call in train_calls
@@ -77,6 +79,15 @@ def test_benchmark_trains_each_policy_seed_then_evaluates_its_own_checkpoints(mo
     }
     assert all("train-seed-" in call["model_dir"].as_posix() for call in eval_calls)
     assert all(call["mcs_model_name"].endswith("_mcs_net.pkl") for call in eval_calls)
+    assert {
+        (call["policy"], call["seed"], call["model_dir"].relative_to(tmp_path).as_posix())
+        for call in eval_calls
+    } == {
+        (policy, eval_seed, f"{policy}/train-seed-{train_seed}/models")
+        for policy in ("mlp", "gnn")
+        for train_seed in (11, 22)
+        for eval_seed in (101, 202)
+    }
     assert outputs["episode_metrics"].is_file()
     assert outputs["per_seed_metrics"].is_file()
     assert outputs["summary_metrics"].is_file()

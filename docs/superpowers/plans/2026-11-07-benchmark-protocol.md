@@ -36,10 +36,10 @@
 **Interfaces:**
 - Produces: `parse_seed_list(value: str) -> list[int]`, `summarize_episode_metrics(frame: pandas.DataFrame) -> tuple[pandas.DataFrame, pandas.DataFrame]`.
 
-- [ ] **Step 1: Write failing tests** for valid/invalid seed lists and two-stage mean/std aggregation.
-- [ ] **Step 2: Run `python -m pytest -q tests/test_benchmark.py`**; expect import failure.
-- [ ] **Step 3: Implement parsing and aggregation helpers** with explicit metadata columns and numeric-only metric selection.
-- [ ] **Step 4: Run the focused test**; expect pass.
+- [x] **Step 1: Write failing tests** for valid/invalid seed lists and two-stage mean/std aggregation.
+- [x] **Step 2: Run `python -m pytest -q tests/test_benchmark.py`**; observed import failure before the module existed.
+- [x] **Step 3: Implement parsing and aggregation helpers** with explicit metadata columns and numeric-only metric selection.
+- [x] **Step 4: Run the focused test**; passed.
 
 ### Task 2: Orchestration and CLI
 
@@ -53,10 +53,10 @@
 - Consumes: `run_experiment`, `checkpoint_names`, parsed policies/seeds/budgets.
 - Produces: `run_benchmark(...) -> dict[str, pathlib.Path]` and the `benchmark` CLI mode.
 
-- [ ] **Step 1: Write failing tests** mocking `run_experiment` to verify training/evaluation call matrix, checkpoint isolation, CSV outputs, and CLI output creation.
-- [ ] **Step 2: Run focused tests**; expect failure because the orchestrator/mode does not exist.
-- [ ] **Step 3: Implement `run_benchmark`** and integrate CLI validation/argument routing.
-- [ ] **Step 4: Run focused tests**; expect pass.
+- [x] **Step 1: Write failing tests** mocking `run_experiment` to verify training/evaluation call matrix, checkpoint isolation, CSV outputs, and CLI output creation.
+- [x] **Step 2: Run focused tests**; observed failure before the orchestrator/mode existed.
+- [x] **Step 3: Implement `run_benchmark`** and integrate CLI validation/argument routing.
+- [x] **Step 4: Run focused tests**; passed.
 
 ### Task 3: Documentation and verification
 
@@ -65,6 +65,6 @@
 - Modify: `docs/application-project-profile.md`
 - Test: `tests/`
 
-- [ ] **Step 1: Document the exact benchmark command and explain that its summaries are required before comparative claims.**
-- [ ] **Step 2: Run `python -m pytest -q`;** expect all tests pass.
-- [ ] **Step 3: Run a two-policy, one-seed smoke benchmark** and inspect all three CSVs plus `protocol.json`.
+- [x] **Step 1: Document the exact benchmark command and explain that its summaries are required before comparative claims.**
+- [x] **Step 2: Run `python -m pytest -q`;** 45 passed.
+- [x] **Step 3: Run a two-policy, one-seed smoke benchmark** and inspect all three CSVs plus `protocol.json`.

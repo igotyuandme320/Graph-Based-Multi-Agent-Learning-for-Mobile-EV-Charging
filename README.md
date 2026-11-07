@@ -94,7 +94,7 @@ python -m marl_ev_mcs benchmark --policies mlp gnn \
   --output results/benchmark
 ```
 
-结果目录中的 `episode_metrics.csv` 是逐评估回合原始结果；`per_seed_metrics.csv` 先对每个 `(policy, train_seed, eval_seed)` 平均；`summary_metrics.csv` 再以 seed-run 为样本报告每种策略的均值、标准差和 `n_runs`。`protocol.json` 保存完整的配置、预算和种子，因此只有基于这一协议的结果才适合用于方法对比。
+结果目录中的 `episode_metrics.csv` 是逐评估回合原始结果；`per_seed_metrics.csv` 先对每个 `(policy, train_seed, eval_seed)` 平均；`summary_metrics.csv` 再以 seed-run 为样本报告每种策略的均值、标准差和 `n_runs`。同一评估 seed 的每个回合都会在 reset 前重置场景随机数，因此策略的决策次数不会改变之后的测试场景。`protocol.json` 保存完整的配置、预算和种子，因此只有基于这一协议的结果才适合用于方法对比。
 
 ## 如何解读评估指标
 
