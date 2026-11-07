@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "marl-ev-mcs"
+version = "0.1.0"
+description = "Multi-agent DQN experiment for EV and mobile charging-station coordination"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "python-geohash>=0.8",
+    "torch>=2.5",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["marl_ev_mcs*", "DQN*", "env*"]
+namespaces = true

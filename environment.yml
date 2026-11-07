@@ -1,0 +1,12 @@
+name: marl-ev-mcs
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - numpy
+  - pandas
+  - pytest
+  - pip:
+      - torch>=2.5
+      - python-geohash>=0.8
