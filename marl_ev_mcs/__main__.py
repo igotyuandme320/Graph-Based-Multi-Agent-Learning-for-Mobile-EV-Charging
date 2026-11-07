@@ -34,8 +34,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--output",
         type=Path,
-        default=project_root() / "results",
-        help="Directory for metrics.csv (created if needed).",
+        help="Output directory.",
     )
     parser.add_argument("--policies", nargs="+", choices=sorted(SUPPORTED_POLICIES), default=["mlp", "gnn"], help="Policies to compare in benchmark mode.")
     parser.add_argument("--train-seeds", default="7,17,27", help="Comma-separated training seeds for benchmark mode.")
@@ -53,6 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("--episodes and --steps must both be at least 1")
     preset = "smoke" if args.smoke else "default"
     config = default_config(preset)
+    output_dir = args.output or project_root() / "results"
     if args.mode == "benchmark":
         try:
             outputs = run_benchmark(
@@ -64,15 +64,15 @@ def main(argv: list[str] | None = None) -> int:
                 train_steps=args.train_steps,
                 eval_episodes=args.eval_episodes,
                 eval_steps=args.eval_steps,
-                output_dir=args.output,
+                output_dir=output_dir,
             )
         except ValueError as error:
             raise SystemExit(str(error)) from error
-        print(f"Wrote benchmark results to {args.output}")
+        print(f"Wrote benchmark results to {output_dir}")
         for name, path in outputs.items():
             print(f"{name}: {path}")
         return 0
-    model_output = args.model_output or args.output / "models"
+    model_output = args.model_output or output_dir / "models"
     results = run_experiment(
         config,
         episodes=args.episodes,
@@ -85,8 +85,8 @@ def main(argv: list[str] | None = None) -> int:
         seed=args.seed,
         policy=args.policy,
     )
-    args.output.mkdir(parents=True, exist_ok=True)
-    output_file = args.output / "metrics.csv"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_file = output_dir / "metrics.csv"
     pd.DataFrame(results).to_csv(output_file, index=False)
     print(f"Wrote {len(results)} episode(s) to {output_file}")
     if args.mode == "train":

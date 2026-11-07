@@ -54,6 +54,7 @@ def summarize_episode_metrics(episodes: pd.DataFrame) -> tuple[pd.DataFrame, pd.
     for policy, rows in per_seed.groupby("policy", sort=True):
         record: dict[str, float | int | str] = {"policy": policy, "n_runs": len(rows)}
         for metric in metric_columns:
+            record[f"{metric}_n"] = int(rows[metric].count())
             record[f"{metric}_mean"] = float(rows[metric].mean())
             record[f"{metric}_std"] = float(rows[metric].std(ddof=1)) if len(rows) > 1 else 0.0
         records.append(record)

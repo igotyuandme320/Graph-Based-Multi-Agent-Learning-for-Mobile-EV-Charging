@@ -60,3 +60,23 @@ def test_episode_metrics_distinguish_assignment_completion_failure_and_unserved(
     assert metrics["in_progress_request_count"] == 1
     assert metrics["mean_wait_time_completed"] == pytest.approx(10.0)
     assert metrics["mean_wait_time_failed"] == pytest.approx(25.0)
+
+
+def test_completed_only_metrics_are_undefined_when_no_request_completes():
+    ev = SimpleNamespace(
+        requested_charge=True,
+        assigned_charge=False,
+        charge_completed=False,
+        fail_charge=True,
+        total_wait_time=25.0,
+        total_extra_dist=3.0,
+        total_reward=0.0,
+        expense=0.0,
+    )
+    world = SimpleNamespace(MCSs=[], EVs=[ev])
+
+    metrics = _episode_metrics(world, episode=0, decision_times=[])
+
+    assert metrics["mean_wait_time_completed"] is None
+    assert metrics["mean_extra_distance_completed"] is None
+    assert metrics["mean_expense"] is None

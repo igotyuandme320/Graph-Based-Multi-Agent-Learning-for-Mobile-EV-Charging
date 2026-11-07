@@ -98,6 +98,8 @@ def test_benchmark_cli_writes_auditable_result_files(tmp_path):
     assert (output / "protocol.json").is_file()
 
 
+
+
 def test_cli_is_available_outside_project_root(tmp_path):
     output = tmp_path / "external-metrics"
     result = subprocess.run(

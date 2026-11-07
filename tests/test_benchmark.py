@@ -38,8 +38,10 @@ def test_summary_aggregates_episodes_before_seed_runs_and_fills_single_std():
     gnn_summary = summary.loc[summary["policy"] == "gnn"].iloc[0]
     assert mlp_summary["completed_proportion_mean"] == pytest.approx(0.5)
     assert mlp_summary["completed_proportion_std"] == pytest.approx(0.282842712474619)
+    assert mlp_summary["completed_proportion_n"] == 2
     assert mlp_summary["n_runs"] == 2
     assert gnn_summary["completed_proportion_std"] == 0.0
+    assert gnn_summary["completed_proportion_n"] == 1
 
 
 def test_benchmark_trains_each_policy_seed_then_evaluates_its_own_checkpoints(monkeypatch, tmp_path):

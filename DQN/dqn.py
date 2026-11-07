@@ -237,7 +237,12 @@ def _safe_divide(numerator: float, denominator: float) -> float:
     return numerator / denominator if denominator else 0.0
 
 
-def _episode_metrics(world: World, episode: int, decision_times: list[float]) -> dict[str, float | int]:
+def _conditional_mean(numerator: float, denominator: float) -> float | None:
+    """Return no value when a conditional population is empty."""
+    return numerator / denominator if denominator else None
+
+
+def _episode_metrics(world: World, episode: int, decision_times: list[float]) -> dict[str, float | int | None]:
     profit = sum(mcs.total_profit - mcs.cost for mcs in world.MCSs)
     cost = sum(mcs.cost for mcs in world.MCSs)
     profit += cost
@@ -284,19 +289,19 @@ def _episode_metrics(world: World, episode: int, decision_times: list[float]) ->
         # correct meaning: a request whose charge was actually completed.
         "charged_proportion": _safe_divide(len(completed), len(requested)),
         "failed_proportion": _safe_divide(len(failed), len(requested)),
-        "mean_wait_time": _safe_divide(completed_wait_time, len(completed)),
-        "mean_wait_time_completed": _safe_divide(completed_wait_time, len(completed)),
-        "mean_wait_time_assigned": _safe_divide(assigned_wait_time, len(assigned)),
-        "mean_wait_time_failed": _safe_divide(failed_wait_time, len(failed)),
-        "mean_extra_distance": _safe_divide(completed_extra_distance, len(completed)),
-        "mean_extra_distance_completed": _safe_divide(completed_extra_distance, len(completed)),
-        "mean_extra_distance_assigned": _safe_divide(assigned_extra_distance, len(assigned)),
-        "mean_expense": _safe_divide(expense, len(completed)),
+        "mean_wait_time": _conditional_mean(completed_wait_time, len(completed)),
+        "mean_wait_time_completed": _conditional_mean(completed_wait_time, len(completed)),
+        "mean_wait_time_assigned": _conditional_mean(assigned_wait_time, len(assigned)),
+        "mean_wait_time_failed": _conditional_mean(failed_wait_time, len(failed)),
+        "mean_extra_distance": _conditional_mean(completed_extra_distance, len(completed)),
+        "mean_extra_distance_completed": _conditional_mean(completed_extra_distance, len(completed)),
+        "mean_extra_distance_assigned": _conditional_mean(assigned_extra_distance, len(assigned)),
+        "mean_expense": _conditional_mean(expense, len(completed)),
         "mcs_idle_time": _safe_divide(idle_time, len(world.MCSs)),
         "mcs_cost": _safe_divide(cost, len(world.MCSs)),
         "mcs_profit": _safe_divide(profit, len(world.MCSs)),
         "mcs_reward": _safe_divide(mcs_reward, idle_time / 5),
-        "iev_reward": _safe_divide(iev_reward, completed_wait_time / 5),
+        "iev_reward": _conditional_mean(iev_reward, completed_wait_time / 5),
         "mean_decision_ms": float(np.mean(decision_times)) if decision_times else 0.0,
     }
 
